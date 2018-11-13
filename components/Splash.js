@@ -3,7 +3,8 @@ import {
     View,
     ImageBackground, 
     StyleSheet,
-    Image
+    Image,
+    StatusBar
 } from 'react-native';
 
 import bgImage from '../images/futbol-sport-27097.jpg' 
@@ -13,6 +14,9 @@ export default class Splash extends Component {
     render() {
         return (
             <ImageBackground source={bgImage} style={styles.backgroundContainer}>
+                <StatusBar
+                    barStyle="light-content"
+                />
                 <Image source={logoImage} style={styles.logoImage} />
             </ImageBackground>
         )

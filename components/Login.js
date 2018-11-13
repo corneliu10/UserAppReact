@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  StatusBar
 } from 'react-native';
 
 import bgImage from  '../images/futbol-sport-27097.jpg'
@@ -36,6 +37,9 @@ export default class Login extends Component {
     render() {
         return (
             <KeyboardAvoidingView behavior='padding' style={styles.loginContainer} >
+                <StatusBar
+                    barStyle="light-content"
+                />
                 <ImageBackground  source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
                         <Image source={logo} style={styles.logo} />        
@@ -50,6 +54,8 @@ export default class Login extends Component {
                                 placeholder={'Email'}
                                 returnKeyType="next"
                                 keyboardType='email-address'
+                                autoCapitalize="none"
+                                autoCorrect={false}
                                 onSubmitEditing={() => this.passwordInput.focus()}
                                 placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
                             />
