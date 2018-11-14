@@ -15,6 +15,7 @@ import bgImage from  '../images/futbol-sport-27097.jpg'
 import logo from '../images/modernSpace.png'
 import Icon from 'react-native-vector-icons/Ionicons'
 
+import Toast from 'react-native-simple-toast'
 import { TextInput } from 'react-native-gesture-handler';
 
 const { width: WIDTH} = Dimensions.get('window')
@@ -25,7 +26,8 @@ export default class Login extends Component {
           hidePass: true,
           press: false,
           email: '',
-          password: ''
+          password: '',
+          token: ''
         }
     }
     
@@ -65,7 +67,18 @@ export default class Login extends Component {
             'Content-Type': 'application/json'
         }
         }).then(res => res.json())
-        .then(response => console.log('Success:', JSON.stringify(response)))
+        .then(response => {
+            if(response.hasOwnProperty('token')) {
+                console.log(response.token);
+                this.setState({
+                    token: response.token
+                })
+            }
+            else {
+                console.log(response.message);
+                Toast.show(response.message, Toast.LONG);
+            }
+        })
         .catch(error => console.error('Error:', error));
     }
 
@@ -106,6 +119,7 @@ export default class Login extends Component {
                                 returnKeyType="go"
                                 onChangeText={(text)=>this.textChanged(text, 'password')}
                                 secureTextEntry={this.state.hidePass}
+                                onSubmitEditing={() => this.login()}
                                 placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
                                 ref={(input) => this.passwordInput = input}
                             />
