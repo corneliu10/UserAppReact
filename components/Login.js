@@ -23,7 +23,9 @@ export default class Login extends Component {
         super()
         this.state = {
           hidePass: true,
-          press: false
+          press: false,
+          email: '',
+          password: ''
         }
     }
     
@@ -34,6 +36,39 @@ export default class Login extends Component {
             this.setState({ hidePass: true, press: false})
         }
     }
+
+    textChanged(text, field) {
+        if(field == 'email') {
+            this.setState({
+                email: text
+            })
+        } else if(field == 'password') {
+            this.setState({
+                password: text
+            })
+        }
+    }
+
+    login() {
+        /// TODO: check if valid format for email
+
+        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/users/login/';
+        var data = {
+            password: this.state.password,
+            email: this.state.email
+        };
+
+        fetch(url, { 
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers:{
+            'Content-Type': 'application/json'
+        }
+        }).then(res => res.json())
+        .then(response => console.log('Success:', JSON.stringify(response)))
+        .catch(error => console.error('Error:', error));
+    }
+
     render() {
         return (
             <KeyboardAvoidingView behavior='padding' style={styles.loginContainer} >
@@ -55,6 +90,7 @@ export default class Login extends Component {
                                 returnKeyType="next"
                                 keyboardType='email-address'
                                 autoCapitalize="none"
+                                onChangeText={(text)=>this.textChanged(text, 'email')}
                                 autoCorrect={false}
                                 onSubmitEditing={() => this.passwordInput.focus()}
                                 placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
@@ -68,6 +104,7 @@ export default class Login extends Component {
                                 style={styles.textInput}
                                 placeholder={'Password'}
                                 returnKeyType="go"
+                                onChangeText={(text)=>this.textChanged(text, 'password')}
                                 secureTextEntry={this.state.hidePass}
                                 placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
                                 ref={(input) => this.passwordInput = input}
@@ -82,7 +119,8 @@ export default class Login extends Component {
 
 
                     <TouchableOpacity style={styles.btnLogin}
-                        activeOpacity={0.6}>
+                        activeOpacity={0.6}
+                        onPress={()=>this.login()}>
                         <Text style={styles.text}>Login</Text>
                     </TouchableOpacity>
 
