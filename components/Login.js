@@ -18,6 +18,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-simple-toast'
 import { TextInput } from 'react-native-gesture-handler';
 
+const util = require('util');
+
 const { width: WIDTH} = Dimensions.get('window')
 export default class Login extends Component {
     constructor() {
@@ -59,6 +61,7 @@ export default class Login extends Component {
             password: this.state.password,
             email: this.state.email
         };
+        var {navigate} = this.props.navigation;
 
         fetch(url, { 
         method: 'POST', // or 'PUT'
@@ -73,6 +76,9 @@ export default class Login extends Component {
                 this.setState({
                     token: response.token
                 })
+                Toast.show("Welcome back: " + this.state.email, Toast.LONG);
+                
+                navigate("GamesScreen", {token: this.state.token});
             }
             else {
                 console.log(response.message);
@@ -132,7 +138,8 @@ export default class Login extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={styles.btnLogin}
+                    <TouchableOpacity 
+                        style={styles.btnLogin}
                         activeOpacity={0.6}
                         onPress={()=>this.login()}>
                         <Text style={styles.text}>Login</Text>
