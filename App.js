@@ -6,7 +6,8 @@ import {
 import Splash from './components/Splash';
 import Login from './components/Login';
 import Games from './components/Games';
-import NewAccount from './components/NewAccount'
+import NewAccount from './components/NewAccount';
+import NewGame from './components/NewGame';
 
 import { StackNavigator } from 'react-navigation'; 
 
@@ -16,6 +17,12 @@ const Navigation = StackNavigator({
     navigationOptions: {
       header: null
     },
+  },
+  NewGameScreen: {
+    screen: NewGame,
+    navigationOptions: {
+      header: null
+    }
   },
   NewAccountScreen: {
     screen: NewAccount,

@@ -25,11 +25,9 @@ export default class Login extends Component {
     constructor() {
         super()
         this.state = {
-          hidePass: true,
-          press: false,
-          email: '',
-          password: '',
-          token: ''
+            opponentName: '',
+            score: '',
+            address: ''
         }
     }
     
@@ -42,43 +40,49 @@ export default class Login extends Component {
     }
 
     textChanged(text, field) {
-        if(field == 'email') {
+        if(field == 'opponentName') {
             this.setState({
-                email: text
+                opponentName: text
             })
-        } else if(field == 'password') {
+        } else if(field == 'score') {
             this.setState({
-                password: text
+                score: text
+            })
+        } else if(field == 'address') {
+            this.setState({
+                address: text
             })
         }
     }
 
-    login() {
+    createGame() {
         /// TODO: check if valid format for email
 
-        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/users/login/';
+        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/users/';
         var data = {
-            password: this.state.password,
-            email: this.state.email
+            opponentName: this.state.opponentName,
+            score: this.state.score,
+            address: this.state.address
         };
-        var {navigate} = this.props.navigation;
+
+        console.log(data);
 
         fetch(url, { 
         method: 'POST', // or 'PUT'
         body: JSON.stringify(data), // data can be `string` or {object}!
         headers:{
+            'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyZTQ0MzAxMC1kYjU5LTRiMjAtYTMwMi1jYmM0MmUxNGU1ZGQiLCJpYXQiOjE1NDIxMzY3MTYsImV4cCI6MTU0Mjc0MTUxNn0.q7V1z5YR1uMCg-vJra0dL8On06yacSY_lFdyV2NUmkY',
             'Content-Type': 'application/json'
         }
         }).then(res => res.json())
         .then(response => {
+            console.log(response);
             if(response.hasOwnProperty('token')) {
                 console.log(response.token);
-                this.setState({
-                    token: response.token
-                })
-                //Toast.show("Welcome back: " + this.state.email, Toast.LONG);
+
+                //Toast.show("Account created!", Toast.LONG);
                 
-                navigate("GamesScreen", {token: this.state.token});
+                navigate("Login", null);
             }
             else {
                 console.log(response.message);
@@ -96,62 +100,65 @@ export default class Login extends Component {
                 />
                 <ImageBackground  source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
-                        <Image source={logo} style={styles.logo} />        
+                        <Image 
+                            style={styles.imageContainer}
+                            //TODO on click select photo from gallery
+                            source={{ uri: "https://www.shareicon.net/data/2016/08/05/806962_user_512x512.png" }} />        
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <View style={styles.emailInput}>
-                        <Icon name={'ios-mail'} size={28} color={'rgba(255, 255, 255, 0.85)'}
-                            style={styles.inputIcon} />
-                            <TextInput 
-                                style={styles.textInput}
-                                placeholder={'Email'}
-                                returnKeyType="next"
-                                keyboardType='email-address'
-                                autoCapitalize="none"
-                                onChangeText={(text)=>this.textChanged(text, 'email')}
-                                autoCorrect={false}
-                                onSubmitEditing={() => this.passwordInput.focus()}
-                                placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
-                            />
+                        <View style={styles.textFieldInput}>
+                            <Icon name={'ios-person'} size={28} color={'rgba(255, 255, 255, 0.85)'}
+                                style={styles.inputIcon} />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    placeholder={'Opponent Name'}
+                                    returnKeyType="next"
+                                    onChangeText={(text)=>this.textChanged(text, 'opponentName')}
+                                    autoCorrect={false}
+                                    onSubmitEditing={() => this.scoreInput.focus()}
+                                    placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
+                                />
                         </View>
 
-                        <View style={styles.passInput}>
-                            <Icon name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.85)'}
+                        <View style={styles.textFieldInput}>
+                            <Icon name={'ios-american-football'} size={28} color={'rgba(255, 255, 255, 0.85)'}
+                                style={styles.inputIcon} />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    placeholder={'Score'}
+                                    returnKeyType="next"
+                                    autoCapitalize="none"
+                                    onChangeText={(text)=>this.textChanged(text, 'score')}
+                                    autoCorrect={false}
+                                    onSubmitEditing={() => this.addressInput.focus()}
+                                    ref={(input) => this.scoreInput = input}
+                                    placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
+                                />
+                        </View>
+
+                        <View style={styles.textFieldInput}>
+                            <Icon name={'ios-pin'} size={28} color={'rgba(255, 255, 255, 0.85)'}
                                 style={styles.inputIcon} />
                             <TextInput 
                                 style={styles.textInput}
-                                placeholder={'Password'}
+                                placeholder={'Address'}
                                 returnKeyType="go"
-                                onChangeText={(text)=>this.textChanged(text, 'password')}
-                                secureTextEntry={this.state.hidePass}
-                                onSubmitEditing={() => this.login()}
+                                onChangeText={(text)=>this.textChanged(text, 'address')}
+                                onSubmitEditing={() => this.createGame()}
                                 placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
-                                ref={(input) => this.passwordInput = input}
+                                ref={(input) => this.addressInput = input}
                             />
                         
-                        <TouchableOpacity style={styles.btnEye}
-                            onPress={this.hidePass.bind(this)}>
-                            <Icon name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} size={26} color={'rgba(255, 255, 255, 0.85)'} />
-                        </TouchableOpacity>
                         </View>
                     </View>
 
 
                     <TouchableOpacity 
-                        style={styles.btnLogin}
+                        style={styles.btnCreate}
                         activeOpacity={0.6}
-                        onPress={()=>this.login()}>
-                        <Text style={styles.text}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={styles.btnLogin}
-                        activeOpacity={0.6}
-                        onPress={()=>{
-                            var {navigate} = this.props.navigation;
-                            navigate("NewGameScreen", null);
-                        }}>
-                        <Text style={styles.text}>Sign up</Text>
+                        onPress={()=>this.createGame()}>
+                        <Text style={styles.text}>Create Game</Text>
                     </TouchableOpacity>
 
                 </ImageBackground>
@@ -174,11 +181,6 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: 'center'
     },
-    logo: {
-        width: 220,
-        height: 150,
-        opacity: 0.9
-    },
     inputContainer: {
         marginTop: 25
     },
@@ -197,15 +199,10 @@ const styles = StyleSheet.create({
         top: 5,
         left: 37
     },
-    passInput: {
+    textFieldInput: {
         marginTop: 10
     },
-    btnEye: {
-        position: 'absolute',
-        top: 5,
-        right: 37
-    },
-    btnLogin: {
+    btnCreate: {
         width: WIDTH - 100,
         height: 40,
         borderRadius: 25,
@@ -219,6 +216,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center'
-    }
+    },
+    imageContainer: {
+        width: 150,
+        height: 150,
+        margin: 5,
+        marginBottom: 2
+    },
     
 });
