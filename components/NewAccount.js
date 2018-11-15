@@ -29,7 +29,7 @@ export default class Login extends Component {
           press: false,
           email: '',
           password: '',
-          token: ''
+          fullName: ''
         }
     }
     
@@ -50,18 +50,22 @@ export default class Login extends Component {
             this.setState({
                 password: text
             })
+        } else if(field == 'fullName') {
+            this.setState({
+                fullName: text
+            })
         }
     }
 
-    login() {
+    createAccount() {
         /// TODO: check if valid format for email
 
-        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/users/login/';
+        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/users/';
         var data = {
             password: this.state.password,
-            email: this.state.email
+            email: this.state.email,
+            fullName: this.state.fullName
         };
-        var {navigate} = this.props.navigation;
 
         fetch(url, { 
         method: 'POST', // or 'PUT'
@@ -71,14 +75,13 @@ export default class Login extends Component {
         }
         }).then(res => res.json())
         .then(response => {
+            console.log(response);
             if(response.hasOwnProperty('token')) {
                 console.log(response.token);
-                this.setState({
-                    token: response.token
-                })
-                //Toast.show("Welcome back: " + this.state.email, Toast.LONG);
+
+                //Toast.show("Account created!", Toast.LONG);
                 
-                navigate("GamesScreen", {token: this.state.token});
+                navigate("Login", null);
             }
             else {
                 console.log(response.message);
@@ -100,23 +103,38 @@ export default class Login extends Component {
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <View style={styles.emailInput}>
-                        <Icon name={'ios-mail'} size={28} color={'rgba(255, 255, 255, 0.85)'}
-                            style={styles.inputIcon} />
-                            <TextInput 
-                                style={styles.textInput}
-                                placeholder={'Email'}
-                                returnKeyType="next"
-                                keyboardType='email-address'
-                                autoCapitalize="none"
-                                onChangeText={(text)=>this.textChanged(text, 'email')}
-                                autoCorrect={false}
-                                onSubmitEditing={() => this.passwordInput.focus()}
-                                placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
-                            />
+                        <View style={styles.textFieldInput}>
+                            <Icon name={'ios-person'} size={28} color={'rgba(255, 255, 255, 0.85)'}
+                                style={styles.inputIcon} />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    placeholder={'Full Name'}
+                                    returnKeyType="next"
+                                    onChangeText={(text)=>this.textChanged(text, 'fullName')}
+                                    autoCorrect={false}
+                                    onSubmitEditing={() => this.emailInput.focus()}
+                                    placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
+                                />
                         </View>
 
-                        <View style={styles.passInput}>
+                        <View style={styles.textFieldInput}>
+                            <Icon name={'ios-mail'} size={28} color={'rgba(255, 255, 255, 0.85)'}
+                                style={styles.inputIcon} />
+                                <TextInput 
+                                    style={styles.textInput}
+                                    placeholder={'Email'}
+                                    returnKeyType="next"
+                                    keyboardType='email-address'
+                                    autoCapitalize="none"
+                                    onChangeText={(text)=>this.textChanged(text, 'email')}
+                                    autoCorrect={false}
+                                    onSubmitEditing={() => this.passwordInput.focus()}
+                                    ref={(input) => this.emailInput = input}
+                                    placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
+                                />
+                        </View>
+
+                        <View style={styles.textFieldInput}>
                             <Icon name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.85)'}
                                 style={styles.inputIcon} />
                             <TextInput 
@@ -125,7 +143,7 @@ export default class Login extends Component {
                                 returnKeyType="go"
                                 onChangeText={(text)=>this.textChanged(text, 'password')}
                                 secureTextEntry={this.state.hidePass}
-                                onSubmitEditing={() => this.login()}
+                                onSubmitEditing={() => this.createAccount()}
                                 placeholderTextColor={'rgba(0, 0, 0, 0.7)'}
                                 ref={(input) => this.passwordInput = input}
                             />
@@ -139,19 +157,10 @@ export default class Login extends Component {
 
 
                     <TouchableOpacity 
-                        style={styles.btnLogin}
+                        style={styles.btnCreate}
                         activeOpacity={0.6}
-                        onPress={()=>this.login()}>
-                        <Text style={styles.text}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={styles.btnLogin}
-                        activeOpacity={0.6}
-                        onPress={()=>{
-                            var {navigate} = this.props.navigation;
-                            navigate("NewAccountScreen", null);
-                        }}>
-                        <Text style={styles.text}>Sign up</Text>
+                        onPress={()=>this.createAccount()}>
+                        <Text style={styles.text}>Create Account</Text>
                     </TouchableOpacity>
 
                 </ImageBackground>
@@ -197,7 +206,7 @@ const styles = StyleSheet.create({
         top: 5,
         left: 37
     },
-    passInput: {
+    textFieldInput: {
         marginTop: 10
     },
     btnEye: {
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
         top: 5,
         right: 37
     },
-    btnLogin: {
+    btnCreate: {
         width: WIDTH - 100,
         height: 40,
         borderRadius: 25,

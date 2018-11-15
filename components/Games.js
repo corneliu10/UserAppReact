@@ -45,21 +45,15 @@ export default class Splash extends Component {
 
     renderItem = ({ item }) => {
         return (
-            this.state.isLoading
-            ?
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color= "#330066" animating />
-            </View>
-            :
             <View style={styles.itemContainer}>
                 <Image 
                     style={styles.imageContainer}
                     source={{ uri: item.opponent_avatar ? item.opponent_avatar : "https://www.shareicon.net/data/2016/08/05/806962_user_512x512.png" }} />
-                <View style={{ flex: 1, justifyContent: 'center', marginLeft: 5 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', marginBottom: 15 }}>
+                <View style={styles.textContainer}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFCF9E', marginBottom: 10 }}>
                         {item.opponent_name}
                     </Text>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'red' }}>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'lightblue' }}>
                         {item.address}
                     </Text>
                 </View>
@@ -78,6 +72,12 @@ export default class Splash extends Component {
 
     render() {
         return (
+            this.state.isLoading
+            ?
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgreen'}}>
+                <ActivityIndicator size="large" color= "#330066" animating />
+            </View>
+            :
             <ImageBackground source={bgImage} style={styles.backgroundContainer}>
                 <StatusBar
                     barStyle="light-content"
@@ -101,12 +101,22 @@ const styles = StyleSheet.create({
     itemContainer: {
         flex: 1,
         flexDirection: 'row',
-        marginBottom: 3
+        marginBottom: 3,
+        marginTop: 3
     },
     imageContainer: {
         width: 100,
         height: 100,
         margin: 5
+    },
+    textContainer: {
+        flex: 1, 
+        opacity: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 5,
+        borderRadius: 40,
+        backgroundColor: 'rgba(255, 255, 255, 1)',
     }
 
 });
