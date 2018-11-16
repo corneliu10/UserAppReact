@@ -76,7 +76,7 @@ export default class Login extends Component {
                 this.setState({
                     token: response.token
                 })
-                Toast.show("Welcome back: " + this.state.email, Toast.LONG);
+                Toast.show("Welcome: " + this.state.email, Toast.LONG);
                 
                 navigate("GamesScreen", {token: this.state.token});
             }
@@ -145,13 +145,13 @@ export default class Login extends Component {
                         <Text style={styles.text}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        style={styles.btnLogin}
+                        style={styles.btnSignUp}
                         activeOpacity={0.6}
                         onPress={()=>{
                             var {navigate} = this.props.navigation;
                             navigate("NewAccountScreen", null);
                         }}>
-                        <Text style={styles.text}>Sign up</Text>
+                        <Text style={styles.textSignUp}>Sign up</Text>
                     </TouchableOpacity>
 
                 </ImageBackground>
@@ -213,6 +213,21 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginHorizontal: 25,
         justifyContent: "center",
+    },
+    btnSignUp: {
+        width: WIDTH - 100,
+        height: 40,
+        borderRadius: 25,
+        backgroundColor: '#01A7C2',
+        marginTop: 15,
+        marginHorizontal: 25,
+        justifyContent: "center",
+    },
+    textSignUp: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center'
     },
     text: {
         color: 'rgba(0, 0, 0, 1)',

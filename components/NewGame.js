@@ -138,7 +138,7 @@ export default class NewGame extends Component {
                                 style={styles.inputIcon} />
                                 <TextInput 
                                     style={styles.textInput}
-                                    placeholder={'Score'}
+                                    placeholder={'Score: [1-2],[3-5],...'}
                                     returnKeyType="next"
                                     autoCapitalize="none"
                                     onChangeText={(text)=>this.textChanged(text, 'score')}
