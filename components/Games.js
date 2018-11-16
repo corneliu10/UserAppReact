@@ -8,30 +8,36 @@ import {
     Text,
     Dimensions,
     FlatList,
-    ActivityIndicator
+    ActivityIndicator,
+    ScrollView,
+    TouchableOpacity,
 } from 'react-native';
 
 import bgImage from '../images/futbol-sport-27097.jpg'
 
+import Icon from 'react-native-vector-icons/Ionicons'
+
 const { width: WIDTH } = Dimensions.get('window')
-export default class Splash extends Component {
+
+export default class Games extends Component {
     constructor() {
-        super()
+        super();
         this.state = {
             dataSource: [],
-            isLoading: true
+            isLoading: true,
         }
+
+        token = ''
     }
 
-    componentDidMount() {
-        var { params } = this.props.navigation.state;
+    reloadGames() {
         var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/game/';
 
         fetch(url, {
             method: 'GET',
             headers: {
                 // TODO: change to token
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyZTQ0MzAxMC1kYjU5LTRiMjAtYTMwMi1jYmM0MmUxNGU1ZGQiLCJpYXQiOjE1NDIxMzY3MTYsImV4cCI6MTU0Mjc0MTUxNn0.q7V1z5YR1uMCg-vJra0dL8On06yacSY_lFdyV2NUmkY'
+                'x-access-token': this.token
             }
         }).then(response => response.json())
             .then(response => {
@@ -44,10 +50,20 @@ export default class Splash extends Component {
             .catch(error => console.error('Error: ', error));
     }
 
+    componentDidMount() {
+        var { params } = this.props.navigation.state;
+
+        this.token = params.token;
+
+        console.log("token: " + this.token);
+
+        this.reloadGames();
+    }
+
     renderItem = ({ item }) => {
         return (
             <View style={styles.itemContainer}>
-                <Image 
+                <Image
                     style={styles.imageContainer}
                     source={{ uri: item.opponent_avatar ? item.opponent_avatar : "https://www.shareicon.net/data/2016/08/05/806962_user_512x512.png" }} />
                 <View style={styles.textContainer}>
@@ -63,10 +79,9 @@ export default class Splash extends Component {
     }
 
     renderSeparator = () => {
-        retunr (
+        return (
             <View
-                style={{ height: 1, width: '100%', backgroundColor: 'black' }}>
-
+                style={{ height: 3, width: '100%', backgroundColor: 'orange' }}>
             </View>
         )
     }
@@ -74,23 +89,40 @@ export default class Splash extends Component {
     render() {
         return (
             this.state.isLoading
-            ?
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgreen'}}>
-                <ActivityIndicator size="large" color= "#330066" animating />
-            </View>
-            :
-            <ImageBackground source={bgImage} style={styles.backgroundContainer}>
-                <StatusBar
-                    barStyle="light-content"
-                />
+                ?
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgreen' }}>
+                    <ActivityIndicator size="large" color="#330066" animating />
+                </View>
+                :
+                <ImageBackground source={bgImage} style={styles.backgroundContainer}>
+                    <StatusBar
+                        barStyle="light-content"
+                    />
+                    <ScrollView>
+                        <FlatList
+                            data={this.state.dataSource}
+                            renderItem={this.renderItem}
+                            keyExtractor={(item, index) => index.toString()}
+                            ItemSeparatorComponent={this.renderSeparator}
+                        />
+                    </ScrollView>
+                    <View style={{ alignItems: 'center', position: 'absolute', left: 0, right: 0, bottom: 0 }} >
+                        <TouchableOpacity
+                            style={styles.addBtn}
+                            onPress={() => {
+                                var { navigate } = this.props.navigation;
+                                var { params } = this.props.navigation.state;
+                                navigate("NewGameScreen", { token: params.token });
 
-                <FlatList
-                    data={this.state.dataSource}
-                    renderItem={this.renderItem}
-                    keyExtractor={(item, index) => index}
-                    ItemSeparatorComponent={this.renderSeparator}
-                />
-            </ImageBackground>
+                                this.props.navigation.addListener('didFocus', () => {
+                                    this.reloadGames();
+                                });
+                            }}
+                        >
+                            <Icon name={"md-add"} size={30} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                </ImageBackground >
         )
     }
 }
@@ -98,6 +130,17 @@ export default class Splash extends Component {
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,
+    },
+    addBtn: {
+        borderWidth: 1,
+        borderColor: 'orange',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 60,
+        height: 60,
+        margin: 8,
+        backgroundColor: 'orange',
+        borderRadius: 100,
     },
     itemContainer: {
         flex: 1,
@@ -111,7 +154,7 @@ const styles = StyleSheet.create({
         margin: 5
     },
     textContainer: {
-        flex: 1, 
+        flex: 1,
         opacity: 1,
         justifyContent: 'center',
         alignItems: 'center',

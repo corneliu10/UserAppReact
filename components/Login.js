@@ -15,7 +15,7 @@ import bgImage from  '../images/futbol-sport-27097.jpg'
 import logo from '../images/modernSpace.png'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-//import Toast from 'react-native-simple-toast'
+import Toast from 'react-native-simple-toast'
 import { TextInput } from 'react-native-gesture-handler';
 
 const util = require('util');
@@ -76,13 +76,13 @@ export default class Login extends Component {
                 this.setState({
                     token: response.token
                 })
-                //Toast.show("Welcome back: " + this.state.email, Toast.LONG);
+                Toast.show("Welcome back: " + this.state.email, Toast.LONG);
                 
                 navigate("GamesScreen", {token: this.state.token});
             }
             else {
                 console.log(response.message);
-                //Toast.show(response.message, Toast.LONG);
+                Toast.show(response.message, Toast.LONG);
             }
         })
         .catch(error => console.error('Error:', error));
@@ -149,7 +149,7 @@ export default class Login extends Component {
                         activeOpacity={0.6}
                         onPress={()=>{
                             var {navigate} = this.props.navigation;
-                            navigate("NewGameScreen", null);
+                            navigate("NewAccountScreen", null);
                         }}>
                         <Text style={styles.text}>Sign up</Text>
                     </TouchableOpacity>

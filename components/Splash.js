@@ -20,6 +20,7 @@ export default class Splash extends Component {
                 <Image source={logoImage} style={styles.logoImage} />
             </ImageBackground>
         )
+
     }
 }
 

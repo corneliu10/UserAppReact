@@ -15,13 +15,13 @@ import bgImage from  '../images/futbol-sport-27097.jpg'
 import logo from '../images/modernSpace.png'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-//import Toast from 'react-native-simple-toast'
+import Toast from 'react-native-simple-toast'
 import { TextInput } from 'react-native-gesture-handler';
 
 const util = require('util');
 
 const { width: WIDTH} = Dimensions.get('window')
-export default class Login extends Component {
+export default class NewAccount extends Component {
     constructor() {
         super()
         this.state = {
@@ -66,6 +66,7 @@ export default class Login extends Component {
             email: this.state.email,
             fullName: this.state.fullName
         };
+        var {navigate} = this.props.navigation;
 
         fetch(url, { 
         method: 'POST', // or 'PUT'
@@ -79,13 +80,13 @@ export default class Login extends Component {
             if(response.hasOwnProperty('token')) {
                 console.log(response.token);
 
-                //Toast.show("Account created!", Toast.LONG);
+                Toast.show("Account created!", Toast.LONG);
                 
-                navigate("Login", null);
+                navigate("LoginScreen", null);
             }
             else {
                 console.log(response.message);
-                //Toast.show(response.message, Toast.LONG);
+                Toast.show(response.message, Toast.LONG);
             }
         })
         .catch(error => console.error('Error:', error));

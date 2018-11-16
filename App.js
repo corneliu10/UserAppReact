@@ -18,6 +18,12 @@ const Navigation = StackNavigator({
       header: null
     },
   },
+  GamesScreen: {
+    screen: Games,
+    navigationOptions: {
+      header: null
+    }
+  },
   NewGameScreen: {
     screen: NewGame,
     navigationOptions: {
@@ -26,12 +32,6 @@ const Navigation = StackNavigator({
   },
   NewAccountScreen: {
     screen: NewAccount,
-    navigationOptions: {
-      header: null
-    }
-  },
-  GamesScreen: {
-    screen: Games,
     navigationOptions: {
       header: null
     }

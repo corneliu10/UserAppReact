@@ -12,16 +12,15 @@ import {
 } from 'react-native';
 
 import bgImage from  '../images/futbol-sport-27097.jpg'
-import logo from '../images/modernSpace.png'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-//import Toast from 'react-native-simple-toast'
+import Toast from 'react-native-simple-toast'
 import { TextInput } from 'react-native-gesture-handler';
 
 const util = require('util');
 
 const { width: WIDTH} = Dimensions.get('window')
-export default class Login extends Component {
+export default class NewGame extends Component {
     constructor() {
         super()
         this.state = {
@@ -56,12 +55,25 @@ export default class Login extends Component {
     }
 
     createGame() {
-        /// TODO: check if valid format for email
+        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/game/';
+        var {navigate} = this.props.navigation;
+        var {params} = this.props.navigation.state;
 
-        var url = 'https://racket-mate-agfsbfyiap.now.sh/api/v1/users/';
+        if(this.state.opponentName == '' || this.state.score=='') {
+            Toast.show("Some values missing!");
+            return;
+        }
+
+        let score = {};
+        let scores = this.state.score.split(',');
+
+        for(let i in scores) {
+            score["score" + i] = scores[i];
+        }
+
         var data = {
             opponentName: this.state.opponentName,
-            score: this.state.score,
+            score: score,
             address: this.state.address
         };
 
@@ -71,22 +83,22 @@ export default class Login extends Component {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(data), // data can be `string` or {object}!
         headers:{
-            'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyZTQ0MzAxMC1kYjU5LTRiMjAtYTMwMi1jYmM0MmUxNGU1ZGQiLCJpYXQiOjE1NDIxMzY3MTYsImV4cCI6MTU0Mjc0MTUxNn0.q7V1z5YR1uMCg-vJra0dL8On06yacSY_lFdyV2NUmkY',
+            'x-access-token': params.token,
             'Content-Type': 'application/json'
         }
         }).then(res => res.json())
         .then(response => {
-            console.log(response);
-            if(response.hasOwnProperty('token')) {
-                console.log(response.token);
+            if(response.hasOwnProperty('id')) {
+                console.log(response);
 
-                //Toast.show("Account created!", Toast.LONG);
+                Toast.show("Game added!", Toast.LONG);
                 
-                navigate("Login", null);
+                console.log(params);
+                navigate("GamesScreen", { token: params.token });
             }
             else {
-                console.log(response.message);
-                //Toast.show(response.message, Toast.LONG);
+                console.log(response);
+                Toast.show("Error:" + response.detail, Toast.LONG);
             }
         })
         .catch(error => console.error('Error:', error));
