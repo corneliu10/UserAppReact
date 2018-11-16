@@ -10,7 +10,22 @@ import {
 import bgImage from '../images/futbol-sport-27097.jpg' 
 import logoImage from '../images/modernSpace.png'
 
+import { StackActions, NavigationActions } from 'react-navigation'
+
 export default class Splash extends Component {
+
+    async componentDidMount() {
+        let wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+        await wait(1000);
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'LoginScreen' })],
+        });
+
+        await this.props.navigation.dispatch(resetAction);
+    }
+
     render() {
         return (
             <ImageBackground source={bgImage} style={styles.backgroundContainer}>

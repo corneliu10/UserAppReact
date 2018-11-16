@@ -12,6 +12,12 @@ import NewGame from './components/NewGame';
 import { StackNavigator } from 'react-navigation'; 
 
 const Navigation = StackNavigator({
+  SplashScreen: { 
+    screen: Splash,
+    navigationOptions: {
+      header: null
+    },
+  },
   LoginScreen: { 
     screen: Login,
     navigationOptions: {
@@ -36,12 +42,6 @@ const Navigation = StackNavigator({
       header: null
     }
   },
-  SplashScreen: { 
-    screen: Splash,
-    navigationOptions: {
-      header: null
-    },
-  }
 });
 
 export default Navigation;

@@ -41,7 +41,6 @@ export default class Games extends Component {
             }
         }).then(response => response.json())
             .then(response => {
-                console.log(response.rows);
                 this.setState({
                     dataSource: response.rows,
                     isLoading: false
@@ -61,18 +60,27 @@ export default class Games extends Component {
     }
 
     renderItem = ({ item }) => {
+        var score = '';
+        for (let i in item.score) {
+            score = score + " " + item.score[i];
+        }
+        const addressText = <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'orange' }}>
+                                Address: {item.address}
+                            </Text>
+
         return (
             <View style={styles.itemContainer}>
                 <Image
                     style={styles.imageContainer}
                     source={{ uri: item.opponent_avatar ? item.opponent_avatar : "https://www.shareicon.net/data/2016/08/05/806962_user_512x512.png" }} />
                 <View style={styles.textContainer}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFCF9E', marginBottom: 10 }}>
-                        {item.opponent_name}
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'lightblue', marginBottom: 10 }}>
+                        Name: {item.opponent_name}
                     </Text>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'lightblue' }}>
-                        {item.address}
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'lightgreen', marginBottom: 10 }}>
+                        Score: {score}
                     </Text>
+                    { item.address != '' ? addressText : <Text></Text>}
                 </View>
             </View>
         )
