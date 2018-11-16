@@ -159,7 +159,8 @@ const styles = StyleSheet.create({
     imageContainer: {
         width: 100,
         height: 100,
-        margin: 5
+        margin: 5,
+        borderRadius: 100
     },
     textContainer: {
         flex: 1,
